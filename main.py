@@ -2,11 +2,24 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 from CTkMessagebox import CTkMessagebox
 
+# ATT KOBE:
+## RANDOM PASSWORD GEN - STRING OF NUMBERS AND LETTERS "STRONG" PASSWORD"
 
+# DESCRIPTION FOR PASSWORD
+
+#
+
+
+
+
+
+
+
+##
 class Main(ctk.CTk):
     def __init__(self, *args, **kwargs):
         ctk.CTk.__init__(self, *args, **kwargs)
-        self.wm_title('Password Manager')
+        self.wm_title('Main | Password Manager')
         self.geometry('1000x600')
         self._set_appearance_mode('dark')
         self.resizable(False, False)
@@ -19,7 +32,7 @@ class Main(ctk.CTk):
 
         self.frames = {}
 
-        for F in (HomePage, StoredPasswordsPage, SettingsPage):
+        for F in (HomePage, StoredPasswordsPage, SettingsPage, AIPage):
             frame = F(container, self)
             frame.configure(height=580, width=740)
 
@@ -49,8 +62,13 @@ class StoredPasswordsPage(ctk.CTkFrame):
 class SettingsPage(ctk.CTkFrame):
     def __init__(self, parent, controller):
         ctk.CTkFrame.__init__(self, parent, fg_color="black")
-        button = ctk.CTkButton(self, text='Settings | Click to go back to home page', command=lambda: controller.show_frames(HomePage))
+        button = ctk.CTkButton(self, text='Settings | Click to to AI Page', command=lambda: controller.show_frames(AIPage))
         button.place(x=50, y=100)
+
+class AIPage(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        ctk.CTkFrame.__init__(self, parent, fg_color="green")
+        button = ctk.CTkButton(self, text="AI Page | Click to go back to home page", command=lambda: controller.show_frames(HomePage))
 
 
 
