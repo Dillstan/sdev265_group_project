@@ -2,10 +2,11 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 from CTkMessagebox import CTkMessagebox
 import tkinter as tk
-from subprocess import call
+import subprocess
 from tkinter import messagebox
 import argon2
 import sqlite3
+import os
 
 # REMOVES "PASSWORD" IN PASSWORD ENTRY
 def password_enter(e):
@@ -22,7 +23,7 @@ def password_leave(e):
 # EXITS CURRENT WINDOW AND OPENS A DIFFERENT ONE
 def register():
     login.destroy()
-    call(['python', 'register.py'])
+    subprocess.call(['python', 'register.py'])
 
 
 # ADDS FUNCTIONALITY TO THE "EYE BUTTON"
@@ -117,7 +118,9 @@ def loginuser(event):
                 # EXITS THE LOGIN PAGE
                 login.destroy()
                 # LOADS THE MAIN PAGE
-                call(['python', 'main.py'])
+                # subprocess.call(['python.exe', 'main.py'])
+                os.system('python main.py')
+
 
 
             except:

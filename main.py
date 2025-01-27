@@ -1,12 +1,9 @@
-import CTkToolTip
 import customtkinter as ctk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-from CTkMessagebox import CTkMessagebox
 from subprocess import call
 import sqlite3
-import CTkToolTip
-
+from CTkToolTip import CTkToolTip
 
 # ATT KOBE:
 ## RANDOM PASSWORD GEN - STRING OF NUMBERS AND LETTERS "STRONG" PASSWORD"
@@ -64,7 +61,7 @@ def fetch_current_user(database):
     return logged_in_user
 
    except:
-       logged_in_user = None
+       logged_in_user = "current_user"
 
 
 
@@ -130,6 +127,18 @@ class Main(ctk.CTk):
         separator_line = ctk.CTkFrame(self, height=600, width=2, fg_color="#151c36")
         separator_line.place(x=90, y=0)
 
+        tool_button_divider_home = ctk.CTkFrame(self, height=2, width=60, fg_color='#333a55')
+        tool_button_divider_home.place(x=15, y=200)
+
+        tool_button_divider_favorites = ctk.CTkFrame(self, height=2, width=60, fg_color='#333a55')
+        tool_button_divider_favorites.place(x=15, y=260)
+
+        tool_button_divider_stored_passwords = ctk.CTkFrame(self, height=2, width=60, fg_color='#333a55')
+        tool_button_divider_stored_passwords.place(x=15, y=320)
+
+        tool_button_divider_generate_passwords = ctk.CTkFrame(self, height=2, width=60, fg_color='#333a55')
+        tool_button_divider_generate_passwords.place(x=15, y=380)
+
         # ----------------- TOOLBAR ICONS ----------------------- #
         home_icon = ctk.CTkImage(Image.open('toolbar_icons/home_icon.png'))
         home_icon._size = 40, 40
@@ -165,8 +174,8 @@ class Main(ctk.CTk):
         generate_password_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=generate_password_icon, fg_color='transparent', text='', hover=False)
         generate_password_icon_button.place(x=0, y=183)
 
-        user_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=user_icon, fg_color='transparent', text='', hover=False)
-        user_icon_button.place(x=0, y=240)
+        user_icon_button = ctk.CTkButton(toolbar_middle, height=40, width=40, image=user_icon, fg_color='transparent', text='', hover=False)
+        user_icon_button.place(x=2, y=248)
 
         add_icon_button = ctk.CTkButton(toolbar_bottom, height=40, width=40, image=add_icon, fg_color='transparent', text='', hover=False)
         add_icon_button.place(x=2, y=6)
@@ -231,17 +240,17 @@ class Main(ctk.CTk):
         current_user_label.place(x=70, y=30)
 
         # -------------------- TOOLTIPS ------------------- #
-        home_tooltip = CTkToolTip.CTkToolTip(home_icon_button, message='Home', delay=0.3)
+        home_tooltip = CTkToolTip(home_icon_button, message='Home', delay=0.1)
 
-        favorites_tooltip = CTkToolTip.CTkToolTip(favorite_icon_button, message='Favorites', delay=0.3)
+        favorites_tooltip = CTkToolTip(favorite_icon_button, message='Favorites', delay=0.1)
 
-        stored_passwords_tooltip = CTkToolTip.CTkToolTip(stored_passwords_icon_button, message='Stored Passwords', delay=0.3)
+        stored_passwords_tooltip = CTkToolTip(stored_passwords_icon_button, message='Stored Passwords', delay=0.1)
 
-        generate_password_tooltip = CTkToolTip.CTkToolTip(generate_password_icon_button, message='Generate Password', delay=0.3)
+        generate_password_tooltip = CTkToolTip(generate_password_icon_button, text_color='green', message='Generate Password', delay=0.1)
 
-        user_tooltip = CTkToolTip.CTkToolTip(user_icon_button, message='My Account', delay=0.3)
+        user_tooltip = CTkToolTip(user_icon_button, message='My Account', delay=0.1)
 
-        add_tooltip = CTkToolTip.CTkToolTip(add_icon_button, message='Add New Password', delay=0.3)
+        add_tooltip = CTkToolTip(add_icon_button, message='Add New Password', delay=0.1)
 
 
 class HomePage(ctk.CTkFrame):
