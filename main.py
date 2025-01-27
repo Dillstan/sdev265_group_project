@@ -1,9 +1,10 @@
 import customtkinter as ctk
+from tkinter import messagebox
 from PIL import Image, ImageTk
 from CTkMessagebox import CTkMessagebox
 from subprocess import call
 import sqlite3
-from CTkToolTip import *
+
 
 
 # ATT KOBE:
@@ -20,6 +21,23 @@ from CTkToolTip import *
 
 
 ##
+
+
+def sign_out():
+
+    users = sqlite3.connect('appdata.db')
+    mycursor = users.cursor()
+
+    command = "update users set LoggedIn = 0 where LoggedIn = 1"
+    mycursor.execute(command)
+    users.commit()
+    users.close()
+
+    messagebox.showinfo("Sign Out", "Signing out...")
+
+    app.destroy()
+
+    call(['python', 'login.py'])
 
 
 def cursor_on_hover(button):
@@ -194,7 +212,7 @@ class Main(ctk.CTk):
         sign_out_icon = ctk.CTkImage(Image.open('toolbar_icons/sign_out_icon.png'))
         sign_out_icon._size = 33, 33
 
-        sign_out_icon_button = ctk.CTkButton(top_bar, image=sign_out_icon, fg_color='transparent', text='', hover=False, height=30, width=30)
+        sign_out_icon_button = ctk.CTkButton(top_bar, image=sign_out_icon, command= sign_out, fg_color='transparent', text='', hover=False, height=30, width=30)
         sign_out_icon_button.place(x=840, y=25)
 
         sign_out_text = ctk.CTkLabel(top_bar, text='Sign Out', font=('Helvetica', 10))
