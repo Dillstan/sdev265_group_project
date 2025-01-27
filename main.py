@@ -6,7 +6,7 @@ import sqlite3
 from CTkToolTip import CTkToolTip
 
 
-# ATT KOBE:
+# ATTN KOBE:
 ## RANDOM PASSWORD GEN - STRING OF NUMBERS AND LETTERS "STRONG" PASSWORD"
 
 # DESCRIPTION FOR PASSWORD
@@ -48,7 +48,9 @@ def reset_cursor_on_leave(button):
 
 
 def fetch_current_user(database):
+
    try:
+
     users = sqlite3.connect(database)
     mycursor = users.cursor()
 
@@ -236,20 +238,18 @@ class Main(ctk.CTk):
         sign_out_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(sign_out_icon_button))
 
         greeting_label = ctk.CTkLabel(top_bar, text='Hello,', font=("Great Vibes", 26, "bold"), width=200)
-        greeting_label.place(x=40, y=3)
+        greeting_label.place(x=40, y=10)
 
         current_user = fetch_current_user('appdata.db')
 
         current_user_label = ctk.CTkLabel(top_bar, text=current_user, font=("Lucida Sans", 20), width=200)
-        current_user_label.place_configure(x=70, y=30)
+        current_user_label.place_configure(x=100, y=40)
 
         profile_picture = ctk.CTkImage(Image.open('profile_picture.png'))
         profile_picture._size = 100, 100
 
         profile_picture_label = ctk.CTkLabel(top_bar, text='', image=profile_picture, )
         profile_picture_label.place(x=0, y=0)
-
-
 
         # -------------------- TOOLTIPS ------------------- #
         home_tooltip = CTkToolTip(home_icon_button, message='Home', delay=0.1)
@@ -271,6 +271,9 @@ class HomePage(ctk.CTkFrame):
 
         button = ctk.CTkButton(self, text='Home Page')
         button.place(x=50, y=100)
+
+        separator_line = ctk.CTkFrame(self, height=500, width=2, fg_color="#151c36")
+        separator_line.place(x=600, y=0)
 
 
 class StoredPasswordsPage(ctk.CTkFrame):
@@ -300,6 +303,7 @@ class GeneratePasswordPage(ctk.CTkFrame):
         ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
         button = ctk.CTkButton(self, text="Generate Password")
         button.place(x=50, y=100)
+
 
 class ProfilePage(ctk.CTkFrame):
     def __init__(self, parent, controller):
