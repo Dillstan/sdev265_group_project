@@ -188,11 +188,17 @@ class Main(ctk.CTk):
         settings_icon_button.bind('<Enter>', lambda event: cursor_on_hover(settings_icon_button))
         settings_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(settings_icon_button))
 
+        settings_text = ctk.CTkLabel(top_bar, text='Settings', font=('Helvetica', 10))
+        settings_text.place(x=790, y=65)
+
         sign_out_icon = ctk.CTkImage(Image.open('toolbar_icons/sign_out_icon.png'))
         sign_out_icon._size = 33, 33
 
         sign_out_icon_button = ctk.CTkButton(top_bar, image=sign_out_icon, fg_color='transparent', text='', hover=False, height=30, width=30)
         sign_out_icon_button.place(x=840, y=25)
+
+        sign_out_text = ctk.CTkLabel(top_bar, text='Sign Out', font=('Helvetica', 10))
+        sign_out_text.place(x=840, y=65)
 
         sign_out_icon_button.bind('<Enter>', lambda event: cursor_on_hover(sign_out_icon_button))
         sign_out_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(sign_out_icon_button))
