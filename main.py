@@ -3,6 +3,8 @@ from PIL import Image, ImageTk
 from CTkMessagebox import CTkMessagebox
 from subprocess import call
 import sqlite3
+from CTkToolTip import *
+
 
 # ATT KOBE:
 ## RANDOM PASSWORD GEN - STRING OF NUMBERS AND LETTERS "STRONG" PASSWORD"
