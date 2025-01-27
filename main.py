@@ -1,10 +1,11 @@
+import CTkToolTip
 import customtkinter as ctk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from CTkMessagebox import CTkMessagebox
 from subprocess import call
 import sqlite3
-
+import CTkToolTip
 
 
 # ATT KOBE:
@@ -229,7 +230,18 @@ class Main(ctk.CTk):
         current_user_label = ctk.CTkLabel(top_bar, text=current_user, font=("Helvetica", 18, "bold"), width=200)
         current_user_label.place(x=70, y=30)
 
+        # -------------------- TOOLTIPS ------------------- #
+        home_tooltip = CTkToolTip.CTkToolTip(home_icon_button, message='Home', delay=0.3)
 
+        favorites_tooltip = CTkToolTip.CTkToolTip(favorite_icon_button, message='Favorites', delay=0.3)
+
+        stored_passwords_tooltip = CTkToolTip.CTkToolTip(stored_passwords_icon_button, message='Stored Passwords', delay=0.3)
+
+        generate_password_tooltip = CTkToolTip.CTkToolTip(generate_password_icon_button, message='Generate Password', delay=0.3)
+
+        user_tooltip = CTkToolTip.CTkToolTip(user_icon_button, message='My Account', delay=0.3)
+
+        add_tooltip = CTkToolTip.CTkToolTip(add_icon_button, message='Add New Password', delay=0.3)
 
 
 class HomePage(ctk.CTkFrame):
