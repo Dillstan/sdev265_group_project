@@ -137,6 +137,7 @@ register_page.geometry("400x600")  # Adjusted window size
 register_page.iconbitmap("appicon.ico")
 register_page.resizable(False, False)
 register_page.eval("tk::PlaceWindow . center")
+register_page.configure(fg_color="#212c56")
 
 # CREATES AND PLACES THE APP LOGO
 icon_label = ctk.CTkLabel(register_page, text="", height=180, width=50, image=main_menu_logo)

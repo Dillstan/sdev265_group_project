@@ -168,7 +168,7 @@ if __name__ == '__main__':
     login.resizable(False, False)
     login.eval("tk::PlaceWindow . center")
     login.protocol("WM_DELETE_WINDOW", lambda: exit_button(login))
-    login.configure(fg_color = "#212c56")
+    login.configure(fg_color="#212c56")
 
     # Enable DPI scaling
     enable_high_dpi_awareness()
