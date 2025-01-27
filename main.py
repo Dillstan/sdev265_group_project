@@ -275,6 +275,9 @@ class HomePage(ctk.CTkFrame):
         separator_line = ctk.CTkFrame(self, height=500, width=2, fg_color="#151c36")
         separator_line.place(x=600, y=0)
 
+        frame = ctk.CTkScrollableFrame(self, height=460, width=565, fg_color="#151c36", scrollbar_button_color='#333a55', scrollbar_button_hover_color='#3e4769')
+        frame.place(x=0, y=10)
+
 
 class StoredPasswordsPage(ctk.CTkFrame):
     def __init__(self, parent, controller):
