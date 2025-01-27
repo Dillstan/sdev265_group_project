@@ -5,6 +5,7 @@ from subprocess import call
 import sqlite3
 from CTkToolTip import CTkToolTip
 
+
 # ATT KOBE:
 ## RANDOM PASSWORD GEN - STRING OF NUMBERS AND LETTERS "STRONG" PASSWORD"
 
@@ -63,6 +64,9 @@ def fetch_current_user(database):
    except:
        logged_in_user = "current_user"
 
+       return logged_in_user
+
+
 
 
 def exit_button(window):
@@ -105,7 +109,7 @@ class Main(ctk.CTk):
 
         self.frames = {}
 
-        for F in (HomePage, StoredPasswordsPage, SettingsPage, AIPage):
+        for F in (HomePage, StoredPasswordsPage, SettingsPage, FavoritesPage, GeneratePasswordPage, ProfilePage, AddPasswordPage):
             frame = F(container, self)
             frame.configure(height=500, width=900)
 
@@ -162,22 +166,22 @@ class Main(ctk.CTk):
         toolbar_logo._size = 50, 50
 
         # ----------------- TOOLBAR IMAGE HOLDERS & BUTTONS ----------------------- #
-        home_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=home_icon, fg_color='transparent', text='', hover=False)
+        home_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=home_icon, fg_color='transparent', text='', hover=False, command=lambda: self.show_frames(HomePage))
         home_icon_button.place(x=0, y=3)
 
-        favorite_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=favorite_icon, fg_color='transparent', text='', hover=False)
+        favorite_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=favorite_icon, fg_color='transparent', text='', hover=False, command=lambda: self.show_frames(FavoritesPage))
         favorite_icon_button.place(x=0, y=63)
 
-        stored_passwords_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=stored_password_icon, fg_color='transparent', text='', hover=False)
+        stored_passwords_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=stored_password_icon, fg_color='transparent', text='', hover=False, command=lambda: self.show_frames(StoredPasswordsPage))
         stored_passwords_icon_button.place(x=0, y=123)
 
-        generate_password_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=generate_password_icon, fg_color='transparent', text='', hover=False)
+        generate_password_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=generate_password_icon, fg_color='transparent', text='', hover=False, command=lambda: self.show_frames(GeneratePasswordPage))
         generate_password_icon_button.place(x=0, y=183)
 
-        user_icon_button = ctk.CTkButton(toolbar_middle, height=40, width=40, image=user_icon, fg_color='transparent', text='', hover=False)
+        user_icon_button = ctk.CTkButton(toolbar_middle, height=40, width=40, image=user_icon, fg_color='transparent', text='', hover=False, command=lambda: self.show_frames(ProfilePage))
         user_icon_button.place(x=2, y=248)
 
-        add_icon_button = ctk.CTkButton(toolbar_bottom, height=40, width=40, image=add_icon, fg_color='transparent', text='', hover=False)
+        add_icon_button = ctk.CTkButton(toolbar_bottom, height=40, width=40, image=add_icon, fg_color='transparent', text='', hover=False, command=lambda: self.show_frames(AddPasswordPage))
         add_icon_button.place(x=2, y=6)
 
         toolbar_logo_label = ctk.CTkLabel(toolbar_top, text='', image=toolbar_logo)
@@ -210,7 +214,7 @@ class Main(ctk.CTk):
         settings_icon = ctk.CTkImage(Image.open('toolbar_icons/settings_icon.png'))
         settings_icon._size = 35, 35
 
-        settings_icon_button = ctk.CTkButton(top_bar, image=settings_icon, fg_color='transparent', text='', hover=False)
+        settings_icon_button = ctk.CTkButton(top_bar, image=settings_icon, fg_color='transparent', text='', hover=False, command=lambda: self.show_frames(SettingsPage))
         settings_icon_button.place(x=740, y=25)
 
         settings_icon_button.bind('<Enter>', lambda event: cursor_on_hover(settings_icon_button))
@@ -231,13 +235,21 @@ class Main(ctk.CTk):
         sign_out_icon_button.bind('<Enter>', lambda event: cursor_on_hover(sign_out_icon_button))
         sign_out_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(sign_out_icon_button))
 
-        greeting_label = ctk.CTkLabel(top_bar, text='Hello,', font=("Helvetica", 20, "bold"), width=200)
+        greeting_label = ctk.CTkLabel(top_bar, text='Hello,', font=("Great Vibes", 26, "bold"), width=200)
         greeting_label.place(x=40, y=3)
 
         current_user = fetch_current_user('appdata.db')
 
-        current_user_label = ctk.CTkLabel(top_bar, text=current_user, font=("Helvetica", 18, "bold"), width=200)
-        current_user_label.place(x=70, y=30)
+        current_user_label = ctk.CTkLabel(top_bar, text=current_user, font=("Lucida Sans", 20), width=200)
+        current_user_label.place_configure(x=70, y=30)
+
+        profile_picture = ctk.CTkImage(Image.open('profile_picture.png'))
+        profile_picture._size = 100, 100
+
+        profile_picture_label = ctk.CTkLabel(top_bar, text='', image=profile_picture, )
+        profile_picture_label.place(x=0, y=0)
+
+
 
         # -------------------- TOOLTIPS ------------------- #
         home_tooltip = CTkToolTip(home_icon_button, message='Home', delay=0.1)
@@ -257,7 +269,7 @@ class HomePage(ctk.CTkFrame):
     def __init__(self, parent, controller):
         ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
 
-        button = ctk.CTkButton(self, text='Home Page | Click For Stored Passwords', command=lambda: controller.show_frames(StoredPasswordsPage))
+        button = ctk.CTkButton(self, text='Home Page')
         button.place(x=50, y=100)
 
 
@@ -265,21 +277,41 @@ class StoredPasswordsPage(ctk.CTkFrame):
     def __init__(self, parent, controller):
         ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
 
-        button = ctk.CTkButton(self, text='Stored Passwords | Click For Settings', command=lambda: controller.show_frames(SettingsPage))
+        button = ctk.CTkButton(self, text='Stored Passwords')
         button.place(x=50, y=100)
 
 
 class SettingsPage(ctk.CTkFrame):
     def __init__(self, parent, controller):
         ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
-        button = ctk.CTkButton(self, text='Settings | Click to to AI Page', command=lambda: controller.show_frames(AIPage))
+        button = ctk.CTkButton(self, text='Settings')
         button.place(x=50, y=100)
 
 
-class AIPage(ctk.CTkFrame):
+class FavoritesPage(ctk.CTkFrame):
     def __init__(self, parent, controller):
         ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
-        button = ctk.CTkButton(self, text="AI Page | Click to go back to home page", command=lambda: controller.show_frames(HomePage))
+        button = ctk.CTkButton(self, text="Favorites")
+        button.place(x=50, y=100)
+
+
+class GeneratePasswordPage(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
+        button = ctk.CTkButton(self, text="Generate Password")
+        button.place(x=50, y=100)
+
+class ProfilePage(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
+        button = ctk.CTkButton(self, text="Profile Page")
+        button.place(x=50, y=100)
+
+
+class AddPasswordPage(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
+        button = ctk.CTkButton(self, text="Add Password Page")
         button.place(x=50, y=100)
 
 
