@@ -113,6 +113,18 @@ class Main(ctk.CTk):
         home_icon = ctk.CTkImage(Image.open('toolbar_icons/home_icon.png'))
         home_icon._size = 40, 40
 
+        favorite_icon = ctk.CTkImage(Image.open('toolbar_icons/star_icon.png'))
+        favorite_icon._size = 40, 40
+
+        stored_password_icon = ctk.CTkImage(Image.open('toolbar_icons/stored_passwords_icon.png'))
+        stored_password_icon._size = 40, 40
+
+        generate_password_icon = ctk.CTkImage(Image.open('toolbar_icons/generate_icon.png'))
+        generate_password_icon._size = 40, 40
+
+        user_icon = ctk.CTkImage(Image.open('toolbar_icons/user_icon.png'))
+        user_icon._size = 40, 40
+
         add_icon = ctk.CTkImage(Image.open('toolbar_icons/add_icon.png'))
         add_icon._size = 40, 40
 
@@ -122,6 +134,18 @@ class Main(ctk.CTk):
         # ----------------- TOOLBAR IMAGE HOLDERS & BUTTONS ----------------------- #
         home_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=home_icon, fg_color='transparent', text='', hover=False)
         home_icon_button.place(x=0, y=3)
+
+        favorite_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=favorite_icon, fg_color='transparent', text='', hover=False)
+        favorite_icon_button.place(x=0, y=63)
+
+        stored_passwords_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=stored_password_icon, fg_color='transparent', text='', hover=False)
+        stored_passwords_icon_button.place(x=0, y=123)
+
+        generate_password_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=generate_password_icon, fg_color='transparent', text='', hover=False)
+        generate_password_icon_button.place(x=0, y=183)
+
+        user_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=user_icon, fg_color='transparent', text='', hover=False)
+        user_icon_button.place(x=0, y=240)
 
         add_icon_button = ctk.CTkButton(toolbar_bottom, height=40, width=40, image=add_icon, fg_color='transparent', text='', hover=False)
         add_icon_button.place(x=2, y=6)
@@ -136,6 +160,18 @@ class Main(ctk.CTk):
         add_icon_button.bind('<Enter>', lambda event: cursor_on_hover(add_icon_button))
         add_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(add_icon_button))
 
+        favorite_icon_button.bind('<Enter>', lambda event: cursor_on_hover(favorite_icon_button))
+        favorite_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(favorite_icon_button))
+
+        stored_passwords_icon_button.bind('<Enter>', lambda event: cursor_on_hover(stored_passwords_icon_button))
+        stored_passwords_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(stored_passwords_icon_button))
+
+        generate_password_icon_button.bind('<Enter>', lambda event: cursor_on_hover(generate_password_icon_button))
+        generate_password_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(generate_password_icon_button))
+
+        user_icon_button.bind('<Enter>', lambda event: cursor_on_hover(user_icon_button))
+        user_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(user_icon_button))
+
         # ----------------- TOP BAR --------------------- #
 
         top_bar = ctk.CTkFrame(self, height=90, width=900, fg_color='#212c56')
@@ -145,10 +181,19 @@ class Main(ctk.CTk):
         settings_icon._size = 35, 35
 
         settings_icon_button = ctk.CTkButton(top_bar, image=settings_icon, fg_color='transparent', text='', hover=False)
-        settings_icon_button.place(x=790, y=25)
+        settings_icon_button.place(x=740, y=25)
 
         settings_icon_button.bind('<Enter>', lambda event: cursor_on_hover(settings_icon_button))
         settings_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(settings_icon_button))
+
+        sign_out_icon = ctk.CTkImage(Image.open('toolbar_icons/sign_out_icon.png'))
+        sign_out_icon._size = 33, 33
+
+        sign_out_icon_button = ctk.CTkButton(top_bar, image=sign_out_icon, fg_color='transparent', text='', hover=False, height=30, width=30)
+        sign_out_icon_button.place(x=840, y=25)
+
+        sign_out_icon_button.bind('<Enter>', lambda event: cursor_on_hover(sign_out_icon_button))
+        sign_out_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(sign_out_icon_button))
 
         greeting_label = ctk.CTkLabel(top_bar, text='Hello,', font=("Helvetica", 20, "bold"), width=200)
         greeting_label.place(x=40, y=3)
@@ -157,6 +202,8 @@ class Main(ctk.CTk):
 
         current_user_label = ctk.CTkLabel(top_bar, text=current_user, font=("Helvetica", 18, "bold"), width=200)
         current_user_label.place(x=70, y=30)
+
+
 
 
 class HomePage(ctk.CTkFrame):
