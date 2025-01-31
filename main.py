@@ -301,11 +301,9 @@ class FavoritesPage(ctk.CTkFrame):
         button.place(x=50, y=100)
 
 
-class GeneratePasswordPage(ctk.CTkFrame):
-    def __init__(self, parent, controller):
-        ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
-        button = ctk.CTkButton(self, text="Generate Password")
-        button.place(x=50, y=100)
+# My code is getting lengthy, so I have it on a separate file for better organization.
+# The GeneratePasswordPage class is located in pwd_gen.py (Shine)
+from pwd_gen import GeneratePasswordPage
 
 
 class ProfilePage(ctk.CTkFrame):
