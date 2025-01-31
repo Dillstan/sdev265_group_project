@@ -11,7 +11,6 @@ from pwd_gen import GeneratePasswordPage
 
 # DESCRIPTION FOR PASSWORD
 
-
 def sign_out():
     users = sqlite3.connect('appdata.db')
     mycursor = users.cursor()
@@ -76,13 +75,16 @@ def clear_frame(frame):
 
 class Main(ctk.CTk):
 
+    def change_title(self, title):
+        self.wm_title(title)
+
     def show_frames(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
 
     def __init__(self, *args, **kwargs):
         ctk.CTk.__init__(self, *args, **kwargs)
-        self.wm_title('Main | Password Manager')
+        self.wm_title('Home | Password Manager')
         self.geometry('1000x600')
         self._set_appearance_mode('dark')
         self.resizable(False, False)
@@ -157,30 +159,30 @@ class Main(ctk.CTk):
 
         # ----------------- TOOLBAR IMAGE HOLDERS & BUTTONS ----------------------- #
         home_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=home_icon, fg_color='transparent',
-                                         text='', hover=False, command=lambda: self.show_frames(HomePage))
+                                         text='', hover=False, command=lambda: (self.show_frames(HomePage), Main.change_title(self, "Home | Password Manager")))
         home_icon_button.place(x=0, y=3)
 
         favorite_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=favorite_icon,
                                              fg_color='transparent', text='', hover=False,
-                                             command=lambda: self.show_frames(FavoritesPage))
+                                             command=lambda: (self.show_frames(FavoritesPage), Main.change_title(self, "Favorites | Password Manager")))
         favorite_icon_button.place(x=0, y=63)
 
         stored_passwords_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=stored_password_icon,
                                                      fg_color='transparent', text='', hover=False,
-                                                     command=lambda: self.show_frames(StoredPasswordsPage))
+                                                     command=lambda: (self.show_frames(StoredPasswordsPage), Main.change_title(self, "Stored Passwords | Password Manager")))
         stored_passwords_icon_button.place(x=0, y=123)
 
         generate_password_icon_button = ctk.CTkButton(toolbar_middle, height=60, width=60, image=generate_password_icon,
                                                       fg_color='transparent', text='', hover=False,
-                                                      command=lambda: self.show_frames(GeneratePasswordPage))
+                                                      command=lambda: (self.show_frames(GeneratePasswordPage), Main.change_title(self, "Generate Password | Password Manager")))
         generate_password_icon_button.place(x=0, y=183)
 
         user_icon_button = ctk.CTkButton(toolbar_middle, height=40, width=40, image=user_icon, fg_color='transparent',
-                                         text='', hover=False, command=lambda: self.show_frames(ProfilePage))
+                                         text='', hover=False, command=lambda: (self.show_frames(ProfilePage), Main.change_title(self, "Your Account | Password Manager")))
         user_icon_button.place(x=2, y=248)
 
         add_icon_button = ctk.CTkButton(toolbar_bottom, height=40, width=40, image=add_icon, fg_color='transparent',
-                                        text='', hover=False, command=lambda: self.show_frames(AddPasswordPage))
+                                        text='', hover=False, command=lambda: (self.show_frames(AddPasswordPage), Main.change_title(self, "Add Password | Password Manager")))
         add_icon_button.place(x=2, y=6)
 
         toolbar_logo_label = ctk.CTkLabel(toolbar_top, text='', image=toolbar_logo)
@@ -215,14 +217,14 @@ class Main(ctk.CTk):
         settings_icon._size = 35, 35
 
         settings_icon_button = ctk.CTkButton(top_bar, image=settings_icon, fg_color='transparent', text='', hover=False,
-                                             command=lambda: self.show_frames(SettingsPage))
+                                             command=lambda: (self.show_frames(SettingsPage), Main.change_title(self, "Settings | Password Manager")))
         settings_icon_button.place(x=740, y=25)
 
         settings_icon_button.bind('<Enter>', lambda event: cursor_on_hover(settings_icon_button))
         settings_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(settings_icon_button))
 
         settings_text = ctk.CTkLabel(top_bar, text='Settings', font=('Helvetica', 10))
-        settings_text.place(x=790, y=65)
+        settings_text.place(x=790, y=63)
 
         sign_out_icon = ctk.CTkImage(Image.open('toolbar_icons/sign_out_icon.png'))
         sign_out_icon._size = 33, 33
@@ -232,7 +234,7 @@ class Main(ctk.CTk):
         sign_out_icon_button.place(x=840, y=25)
 
         sign_out_text = ctk.CTkLabel(top_bar, text='Sign Out', font=('Helvetica', 10))
-        sign_out_text.place(x=840, y=65)
+        sign_out_text.place(x=840, y=63)
 
         sign_out_icon_button.bind('<Enter>', lambda event: cursor_on_hover(sign_out_icon_button))
         sign_out_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(sign_out_icon_button))

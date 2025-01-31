@@ -218,7 +218,7 @@ if __name__ == '__main__':
 
     # IMPORTS THE OPEN EYE BUTTON TO PASSWORD ENTRY
     openeye = Image.open("openeye.png")
-    openeye = openeye.resize((18, 14))
+    openeye = openeye.resize((18, 12))
     openeye = ImageTk.PhotoImage(openeye)
 
     # IMPORTS THE CLOSED EYE BUTTON TO PASSWORD ENTRY
