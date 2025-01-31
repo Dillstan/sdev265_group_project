@@ -5,21 +5,9 @@ from subprocess import call
 import sqlite3
 from CTkToolTip import CTkToolTip
 
-
-# ATTN KOBE:
-## RANDOM PASSWORD GEN - STRING OF NUMBERS AND LETTERS "STRONG" PASSWORD"
+# RANDOM PASSWORD GEN - STRING OF NUMBERS AND LETTERS "STRONG" PASSWORD"
 
 # DESCRIPTION FOR PASSWORD
-
-#
-
-
-
-
-
-
-
-##
 
 
 def sign_out():
@@ -290,8 +278,12 @@ class StoredPasswordsPage(ctk.CTkFrame):
 class SettingsPage(ctk.CTkFrame):
     def __init__(self, parent, controller):
         ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
-        button = ctk.CTkButton(self, text='Settings')
-        button.place(x=50, y=100)
+
+        mode_switch = ctk.CTkSwitch(self, 50, 50, 36, text="Enable Dark Mode", )
+        mode_switch.place(x=100, y=100)
+
+        footer = ctk.CTkLabel(self, text='© 2025 Code Crushers. All Rights Reserved.', font=("Lucida Sans", 10), text_color='gray')
+        footer.place(x=335, y=470)
 
 
 class FavoritesPage(ctk.CTkFrame):
