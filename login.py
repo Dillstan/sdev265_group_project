@@ -217,20 +217,20 @@ if __name__ == '__main__':
     pass_icon_label.place(x=71, y=290)
 
     # IMPORTS THE OPEN EYE BUTTON TO PASSWORD ENTRY
-    openeye = Image.open("openeye.png")
-    openeye = openeye.resize((18, 14))
+    openeye = Image.open("eye.png")
+    openeye = openeye.resize((18, 18))
     openeye = ImageTk.PhotoImage(openeye)
 
     # IMPORTS THE CLOSED EYE BUTTON TO PASSWORD ENTRY
-    closedeye = Image.open("closedeye.png")
-    closedeye = closedeye.resize((18, 12))
+    closedeye = Image.open("lock.png")
+    closedeye = closedeye.resize((18, 18))
     closedeye = ImageTk.PhotoImage(closedeye)
 
     button_mode = False
 
     # CREATES AND PLACES THE OPEN/CLOSED EYE BUTTON FOR PASSWORD ENTRY
     eye_button = tk.Button(login, image=closedeye, bd=0, bg="#343434", command=hide)
-    eye_button.place(x=260, y=297)
+    eye_button.place(x=260, y=295)
 
     # CREATES AND PLACES THE LOGIN BUTTON
     login_button = ctk.CTkButton(login, text="Login",
