@@ -113,8 +113,7 @@ def loginuser(event):
                 ph.verify(fetched_password, password)
                 # PRINTS PASSWORD VERIFIED IN THE TERMINAL
                 print('Password verified!')
-                # POPUP BOX THAT TELLS THE USER THAT THE LOGIN WAS SUCCESSFUL
-                messagebox.showinfo("Login", "Login successful!")
+
                 # EXITS THE LOGIN PAGE
                 login.destroy()
                 # LOADS THE MAIN PAGE
