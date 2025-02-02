@@ -80,7 +80,7 @@ def loginuser(event):
         ph = argon2.PasswordHasher()
 
         # SCANS THE DATABASE AND SEARCHES FOR A USERNAME THAT MATCHES THE ONE ENTERED
-        command = "select * from users where Username = ?"
+        command = "select * from users where username = ?"
 
         # EXECUTES THE ABOVE COMMAND
         mycursor.execute(command, (username,))
@@ -89,7 +89,7 @@ def loginuser(event):
         myresult = mycursor.fetchone()
 
         # CHANGES LOGGED IN TO TRUE FOR THE ENTERED USERNAME
-        command = "update users set LoggedIn = 1 where Username = ?"
+        command = "update users set logged_in = 1 where username = ?"
         mycursor.execute(command, (username,))
 
         users.commit()

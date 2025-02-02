@@ -28,7 +28,7 @@ def check_existing_username(name):
         users = sqlite3.connect('appdata.db')
         mycursor = users.cursor()
 
-        command = "select * from users where Username = ?"
+        command = "select * from users where username = ?"
         mycursor.execute(command, (name,))
         result = mycursor.fetchone()
 
@@ -45,7 +45,7 @@ def check_existing_email(email):
     try:
         users = sqlite3.connect('appdata.db')
         mycursor = users.cursor()
-        command = "select * from users where Email = ?"
+        command = "select * from users where email = ?"
         mycursor.execute(command, (email,))
         myresult = mycursor.fetchone()
 
@@ -100,14 +100,14 @@ def register():
         try:
 
             command = ("create table users (user integer primary key,"
-                       " Username varchar(30), Password varchar(150), Email varchar(50), LoggedIn int)")
+                       " username varchar(30), password varchar(150), email varchar(50), logged_in int)")
             mycursor.execute(command)
 
         except:
             users = sqlite3.connect('appdata.db')
             mycursor = users.cursor()
 
-            command = "select * from users where Username = ?"
+            command = "select * from users where username = ?"
 
             mycursor.execute(command, (username,))
 
@@ -116,7 +116,7 @@ def register():
             ph.hash(password)
             hashed_password = ph.hash(password)
 
-            command = "insert into users (Username, Password, Email, LoggedIn) values (?, ?, ?, ?)"
+            command = "insert into users (username, password, email, logged_in) values (?, ?, ?, ?)"
 
             mycursor.execute(command, (username, hashed_password, email, 0))
             users.commit()
