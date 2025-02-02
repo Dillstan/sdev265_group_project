@@ -27,7 +27,7 @@ def sign_out():
     users = sqlite3.connect('appdata.db')
     mycursor = users.cursor()
 
-    command = "update users set LoggedIn = 0 where LoggedIn = 1"
+    command = "update users set logged_in = 0 where logged_in = ?"
     mycursor.execute(command)
     users.commit()
     users.close()
@@ -46,7 +46,7 @@ def cursor_on_hover(button):
 def reset_cursor_on_leave(button):
     button.configure(cursor='none')
 
-
+# Fetch Current user_id from users table from appdata.db
 def fetch_current_user(database):
 
    try:
@@ -54,12 +54,12 @@ def fetch_current_user(database):
     users = sqlite3.connect(database)
     mycursor = users.cursor()
 
-    command = "select * from users where LoggedIn = 1"
+    command = "select * from users where logged_in = 1"
     mycursor.execute(command)
 
     result = mycursor.fetchone()
-
-    logged_in_user = result[1]
+    # result[0] = current user id
+    logged_in_user = result[0]
 
     return logged_in_user
 
@@ -68,14 +68,29 @@ def fetch_current_user(database):
 
        return logged_in_user
 
+def fetch_current_username(database):
+    try:
+        connection = sqlite3.connect(database)
+        mycursor = connection.cursor()
+        command = "SELECT username FROM users WHERE logged_in = 1"
+        mycursor.execute(command)
+        result = mycursor.fetchone()
+        connection.close()
 
+        if result is not None:
+            return result[0]  # The username
+        else:
+            return "User"
+    except Exception as e:
+        print("Error fetching current username:", e)
+        return "User"
 
 
 def exit_button(window):
     users = sqlite3.connect("appdata.db")
     mycursor = users.cursor()
 
-    command = "update users set LoggedIn = 0 where LoggedIn = 1"
+    command = "update users set logged_in = 0 where logged_in = 1"
     mycursor.execute(command)
     users.commit()
     users.close()
@@ -104,6 +119,10 @@ class Main(ctk.CTk):
         self.eval("tk::PlaceWindow . center")
         self.protocol("WM_DELETE_WINDOW", lambda: exit_button(self))
         self.configure(fg_color='#212c56')
+
+        # Set the current_user_id on this controller
+        self.current_user_id = fetch_current_user('appdata.db')
+        print(f"Main: current_user_id = {self.current_user_id}")  # Debug print
 
         # CREATES AND PLACES FRAME FOR PAGES ON THE RIGHT SIDE
         container = ctk.CTkFrame(self, height=500, width=900, fg_color="#212c56")
@@ -240,7 +259,7 @@ class Main(ctk.CTk):
         greeting_label = ctk.CTkLabel(top_bar, text='Hello,', font=("Great Vibes", 26, "bold"), width=200)
         greeting_label.place(x=40, y=10)
 
-        current_user = fetch_current_user('appdata.db')
+        current_user = fetch_current_username('appdata.db')
 
         current_user_label = ctk.CTkLabel(top_bar, text=current_user, font=("Lucida Sans", 20), width=200)
         current_user_label.place_configure(x=100, y=40)
@@ -279,12 +298,7 @@ class HomePage(ctk.CTkFrame):
         frame.place(x=0, y=10)
 
 
-class StoredPasswordsPage(ctk.CTkFrame):
-    def __init__(self, parent, controller):
-        ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
-
-        button = ctk.CTkButton(self, text='Stored Passwords')
-        button.place(x=50, y=100)
+from password_Vault import StoredPasswordsPage
 
 
 class SettingsPage(ctk.CTkFrame):
