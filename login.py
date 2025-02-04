@@ -114,7 +114,7 @@ def loginuser(event):
                 # PRINTS PASSWORD VERIFIED IN THE TERMINAL
                 print('Password verified!')
                 # POPUP BOX THAT TELLS THE USER THAT THE LOGIN WAS SUCCESSFUL
-                messagebox.showinfo("Login", "Login successful!")
+                #messagebox.showinfo("Login", "Login successful!")
                 # EXITS THE LOGIN PAGE
                 login.destroy()
                 # LOADS THE MAIN PAGE
@@ -147,7 +147,7 @@ def exit_button(window):
     mycursor = users.cursor()
 
     # FOR THE ENTERED USER - CHANGES VALUE OF LOGGEDIN TO TRUE
-    command = "update users set LoggedIn = 0 where LoggedIn = 1"
+    command = "update users set LoggedIn = 0 where logged_in = 1"
 
     # EXECUTES THE ABOVE COMMAND
     mycursor.execute(command)

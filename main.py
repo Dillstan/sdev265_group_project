@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from subprocess import call
 import sqlite3
 from CTkToolTip import CTkToolTip
+from add_password import AddDialogue
 
 
 # ATTN KOBE:
@@ -130,7 +131,7 @@ class Main(ctk.CTk):
 
         self.frames = {}
 
-        for F in (HomePage, StoredPasswordsPage, SettingsPage, FavoritesPage, GeneratePasswordPage, ProfilePage, AddPasswordPage):
+        for F in (HomePage, StoredPasswordsPage, SettingsPage, FavoritesPage, GeneratePasswordPage, ProfilePage):
             frame = F(container, self)
             frame.configure(height=500, width=900)
 
@@ -202,7 +203,7 @@ class Main(ctk.CTk):
         user_icon_button = ctk.CTkButton(toolbar_middle, height=40, width=40, image=user_icon, fg_color='transparent', text='', hover=False, command=lambda: self.show_frames(ProfilePage))
         user_icon_button.place(x=2, y=248)
 
-        add_icon_button = ctk.CTkButton(toolbar_bottom, height=40, width=40, image=add_icon, fg_color='transparent', text='', hover=False, command=lambda: self.show_frames(AddPasswordPage))
+        add_icon_button = ctk.CTkButton(toolbar_bottom, height=40, width=40, image=add_icon, fg_color='transparent', text='', hover=False, command=lambda: add_password())
         add_icon_button.place(x=2, y=6)
 
         toolbar_logo_label = ctk.CTkLabel(toolbar_top, text='', image=toolbar_logo)
@@ -283,6 +284,11 @@ class Main(ctk.CTk):
 
         add_tooltip = CTkToolTip(add_icon_button, message='Add New Password', delay=0.1)
 
+        def add_password():
+            input_dialog = AddDialogue()
+            input_dialog.grab_set()
+            app.wait_window(input_dialog)
+            StoredPasswordsPage.populate_saved_accounts(self=self.frames[StoredPasswordsPage])
 
 class HomePage(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -332,6 +338,8 @@ class AddPasswordPage(ctk.CTkFrame):
         ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
         button = ctk.CTkButton(self, text="Add Password Page")
         button.place(x=50, y=100)
+
+
 
 
 if __name__ == '__main__':
