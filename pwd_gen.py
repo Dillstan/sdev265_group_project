@@ -14,8 +14,8 @@ class GeneratePasswordPage(ctk.CTkFrame):
         self.controller = controller
 
         # Load Images
-        self.eye_img = self.load_resized_image("eye.png", (24, 24))  # Resize to 24x24 pixels
-        self.lock_img = self.load_resized_image("lock.png", (24, 24))  # Resize to 24x24 pixels
+        self.eye_img = self.load_resized_image("resources/eye.png", (24, 24))  # Resize to 24x24 pixels
+        self.lock_img = self.load_resized_image("resources/lock.png", (24, 24))  # Resize to 24x24 pixels
 
         # Frame
         frame = ctk.CTkFrame(self, width=840, height=450, corner_radius=20, fg_color="#2b3564")

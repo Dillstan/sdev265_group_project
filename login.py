@@ -1,44 +1,45 @@
-import customtkinter as ctk
-from PIL import Image, ImageTk
-from CTkMessagebox import CTkMessagebox
-import tkinter as tk
-import subprocess
-from tkinter import messagebox
-import argon2
 import sqlite3
-import os
+import subprocess
+import sys
+import tkinter as tk
+import argon2
+from argon2.exceptions import VerifyMismatchError  # Specific exception for password verification errors
+import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
+from PIL import Image, ImageTk
+
+
+# Initialize database
+from database import create_database
+create_database()
 
 # REMOVES "PASSWORD" IN PASSWORD ENTRY
 def password_enter(e):
     password_entry.delete(0, 'end')
-
 
 # INSERTS "PASSWORD" INTO ENTRY BY DEFAULT
 def password_leave(e):
     if password_entry.get() == '':
         password_entry.insert(0, 'Password')
 
-
 # SENDS USER TO THE ACCOUNT CREATION SCREEN
 # EXITS CURRENT WINDOW AND OPENS A DIFFERENT ONE
 def register():
     login.destroy()
-    subprocess.call(['python', 'register.py'])
-
+    subprocess.call([sys.executable, 'register.py'])
 
 # ADDS FUNCTIONALITY TO THE "EYE BUTTON"
 # IMPLEMENTS THE ABILITY TO HIDE PASSWORD WHEN BUTTON IS CLICKED
 def hide():
     global button_mode
     if button_mode:
-        eye_button.configure(image=closedeye, activebackground="white")
+        eye_button.configure(image=closedeye, text="", fg_color="#343434", hover_color="#343434")
         password_entry.configure(show="*")
         button_mode = False
     else:
-        eye_button.configure(image=openeye, activebackground="white")
+        eye_button.configure(image=openeye, text="", fg_color="#343434", hover_color="#343434")
         password_entry.configure(show="")
         button_mode = True
-
 
 # ALLOWS USER TO LOGIN TO THE APP
 # GETS ENTERED USERNAME AND PASSWORD AND CHECKS IF THEY MEET CRITERIA
@@ -49,8 +50,6 @@ def hide():
 # RETURNS ENCRYPTED PASSWORD FROM DATABASE AND COMPARES IT TO THE PASSWORD ENTERED (BOOL)
 # IF TRUE , THE LOGIN IS SUCCESSFUL
 # IF FALSE, THE USER IS PROMPTED WITH "INVALID USERNAME OR PASSWORD"
-
-
 def loginuser(event):
     # GETS THE USERNAME ENTERED
     username = username_entry.get()
@@ -63,13 +62,11 @@ def loginuser(event):
         CTkMessagebox(title="Error", message="Enter a valid username and password!", icon='warning', sound=True)
 
     else:
-
         # TRYS TO CONNECT TO THE DATABASE
         try:
             users = sqlite3.connect('appdata.db')
             mycursor = users.cursor()
             print("Connected to database!")
-
         # IF CONNECTION FAILS TO ESTABLISH,
         # AN ERROR MESSAGE POPS UP
         except:
@@ -88,22 +85,11 @@ def loginuser(event):
         # RETURNS ONE ROW FROM THE RESULTSET
         myresult = mycursor.fetchone()
 
-        # CHANGES LOGGED IN TO TRUE FOR THE ENTERED USERNAME
-        command = "update users set logged_in = 1 where username = ?"
-        mycursor.execute(command, (username,))
-
-        users.commit()
-        users.close()
-        # FOR DEBUG
-        # print(myresult)
-        # print(f'Password : {fetched_password}')
-
         # IF THE SCAN DOESN'T FIND A MATCH IN THE DATABASE,
         # AN ERROR MESSAGE READING "USERNAME DOESN'T EXIST!" WILL APPEAR
         if myresult is None:
-
             CTkMessagebox(title="Error", message="Username doesn't exist!", icon='warning', sound=True)
-
+            users.close()
         else:
             try:
                 # GETS THE STORED PASSWORD FOR THE ENTERED USERNAME
@@ -114,28 +100,31 @@ def loginuser(event):
                 # PRINTS PASSWORD VERIFIED IN THE TERMINAL
                 print('Password verified!')
 
+                # CHANGES LOGGED IN TO TRUE FOR THE ENTERED USERNAME
+                command = "update users set logged_in = 1 where username = ?"
+                mycursor.execute(command, (username,))
+                users.commit()
+
                 # EXITS THE LOGIN PAGE
                 login.destroy()
                 # LOADS THE MAIN PAGE
-                # subprocess.call(['python.exe', 'main.py'])
-                os.system('python main.py')
+                subprocess.call([sys.executable, 'main.py'])
 
-
-
-            except:
+            except VerifyMismatchError:
                 CTkMessagebox(title="Error", message="Invalid username or password!", icon='warning', sound=True)
                 print('Password verification failed!')
-
+                users.close()
+            except Exception as e:
+                CTkMessagebox(title="Error", message="An error occurred during login.", icon='warning')
+                print("Error during password verification:", e)
+                users.close()
 
 # ADDS SHARPNESS TO UI ON HIGH-RESOLUTION SCREENS
 def enable_high_dpi_awareness():
     try:
-
         login.tk.call('tk', 'scaling', 2.0)
-
     except:
         pass
-
 
 def exit_button(window):
 
@@ -159,14 +148,14 @@ def exit_button(window):
 
 if __name__ == '__main__':
     # IMPORTS THE LOGIN SCREEN LOGO
-    main_menu_logo = ctk.CTkImage(light_image=Image.open("main_menu_logo.png"),
-                                  dark_image=Image.open("main_menu_logo.png"), size=(200, 200))
+    main_menu_logo = ctk.CTkImage(light_image=Image.open("resources/main_menu_logo.png"),
+                                  dark_image=Image.open("resources/main_menu_logo.png"), size=(200, 200))
 
     # Create the main window
     login = ctk.CTk()
     login.title("Login | Password Manager")
     login.geometry("400x500")
-    login.iconbitmap(r"appicon.ico")
+    login.iconbitmap("resources/app_logo.ico")
     login.resizable(False, False)
     login.eval("tk::PlaceWindow . center")
     login.protocol("WM_DELETE_WINDOW", lambda: exit_button(login))
@@ -184,52 +173,53 @@ if __name__ == '__main__':
 
     # CREATES AND PLACES THE ENTRY FOR USERS TO ENTER THEIR USERNAME
     username_entry = ctk.CTkEntry(login, placeholder_text="Username",
-                                  font=("Arial", 15, "bold"), placeholder_text_color="white", width=200)
+                                  font=("Arial", 15, "bold"), placeholder_text_color="white", width=200,height=35)
     username_entry.bind("<Key-space>", lambda e: "break")
     username_entry.place(x=100, y=255)
 
     # IMPORTS THE USERNAME ICON
-    name_icon = ctk.CTkImage(Image.open('name_icon.png'))
+    name_icon = ctk.CTkImage(Image.open('resources/name_icon.png'))
     name_icon._size = 25, 25
 
     # CREATES AND PLACES USERNAME ICON LABEL
     name_icon_label = ctk.CTkLabel(login, image=name_icon, text='')
-    name_icon_label.place(x=70, y=255)
+    name_icon_label.place(x=70, y=260)
 
     # CREATES AND PLACES THE ENTRY FOR USERS TO ENTER THEIR PASSWORD
-    password_entry = ctk.CTkEntry(login, font=("Arial", 15, "bold"), width=200, placeholder_text='Password', show='*', placeholder_text_color='white')
-    # password_entry.insert(0, 'Password')
+    password_entry = ctk.CTkEntry(login, font=("Arial", 15, "bold"), width=200,height=35, placeholder_text='Password', show='*', placeholder_text_color='white')
     password_entry.bind("<FocusIn>", password_enter)
     password_entry.bind("<FocusOut>", password_leave)
-    password_entry.bind("<Key-space>", lambda e: "break")
-    password_entry.place(x=100, y=290)
+    # Removed space blocking for password entry to allow spaces
+    # password_entry.bind("<Key-space>", lambda e: "break")
+    password_entry.place(x=100, y=295)
 
     # ALLOWS USER TO PRESS ENTER BUTTON TO LOGIN
     login.bind("<Return>", loginuser)
 
     # IMPORTS THE PASSWORD ICON
-    pass_icon = ctk.CTkImage(Image.open('pass_icon.png'))
+    pass_icon = ctk.CTkImage(Image.open('resources/pass_icon.png'))
     pass_icon._size = 25, 25
 
     # CREATES AND PLACES USERNAME ICON LABEL
     pass_icon_label = ctk.CTkLabel(login, image=pass_icon, text='')
-    pass_icon_label.place(x=71, y=290)
+    pass_icon_label.place(x=71, y=298)
 
     # IMPORTS THE OPEN EYE BUTTON TO PASSWORD ENTRY
-    openeye = Image.open("eye.png")
+    openeye = Image.open("resources/eye.png")
     openeye = openeye.resize((18, 18))
     openeye = ImageTk.PhotoImage(openeye)
 
     # IMPORTS THE CLOSED EYE BUTTON TO PASSWORD ENTRY
-    closedeye = Image.open("lock.png")
+    closedeye = Image.open("resources/lock.png")
     closedeye = closedeye.resize((18, 18))
     closedeye = ImageTk.PhotoImage(closedeye)
 
     button_mode = False
 
     # CREATES AND PLACES THE OPEN/CLOSED EYE BUTTON FOR PASSWORD ENTRY
-    eye_button = tk.Button(login, image=closedeye, bd=0, bg="#343434", command=hide)
-    eye_button.place(x=260, y=295)
+    # (Using CTkButton for consistency with CustomTkinter)
+    eye_button = ctk.CTkButton(login, image=closedeye, text="", fg_color="#343434",corner_radius=90, hover_color="#343434", command=hide, width=5, height=5)
+    eye_button.place(x=260, y=300)
 
     # CREATES AND PLACES THE LOGIN BUTTON
     login_button = ctk.CTkButton(login, text="Login",

@@ -4,10 +4,9 @@ from CTkMessagebox import CTkMessagebox
 import tkinter as tk
 import subprocess
 from tkinter import messagebox
-import argon2
 import sqlite3
 import os
-
+import keyring  #keyring library
 
 class AddDialogue(ctk.CTk):
     def __init__(self, *args, **kwargs):
@@ -37,9 +36,11 @@ class AddDialogue(ctk.CTk):
         password_entry.place(x=100, y=160)
 
         # CREATES AND PLACES THE SAVE BUTTON
-        login_button = ctk.CTkButton(self, text="Save Password", width=200,
-                                     font=("Arial", 20), fg_color="#4287f5", hover_color="#0a64f5",
-                                     command=lambda: create_password())
+        login_button = ctk.CTkButton(
+            self, text="Save Password", width=200,
+            font=("Arial", 20), fg_color="#4287f5", hover_color="#0a64f5",
+            command=lambda: create_password()
+        )
         login_button.place(x=100, y=195)
 
 
@@ -50,7 +51,7 @@ class AddDialogue(ctk.CTk):
             username = username_entry.get()
             password = password_entry.get()
 
-            if (password == "" or password == "Password"):
+            if not password:
                 messagebox.showerror("Error", "Please enter a password!")
                 return
 
@@ -59,45 +60,82 @@ class AddDialogue(ctk.CTk):
                 mycursor = conn.cursor()
                 print("Connection established")
 
-            except:
-                messagebox.showerror("Connection Error", "Connection not established")
+            except sqlite3.Error as e:
+                messagebox.showerror("Connection Error", f"Database connection failed: {str(e)}")
                 return
 
             try:
                 command = ("""
-                    create table main.saved_accounts (
-                        entry_id         INTEGER
-                            primary key autoincrement,
-                        user_id          INTEGER not null
-                            references main.users_old (user_id)
-                                on delete cascade,
-                        account_name     TEXT    not null,
+                    CREATE TABLE IF NOT EXISTS saved_accounts (
+                        entry_id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                        user_id          INTEGER NOT NULL
+                            REFERENCES users (user_id)
+                                ON DELETE CASCADE,
+                        account_name     TEXT NOT NULL,
                         website_url      TEXT,
-                        associated_email TEXT    not null,
-                        account_password TEXT    not null,
-                        created_at       DATETIME default CURRENT_TIMESTAMP,
-                        username         varchar(50),
-                        logo             BLOB);
-                    
-                create index main.idx_user_accounts
-                    on main.saved_accounts (user_id);
-                            """)
+                        associated_email TEXT NOT NULL,
+                        keyring_service  TEXT,
+                        keyring_username TEXT,
+                        created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        username         VARCHAR(50),
+                        logo             BLOB,
+                        favorite        Boolean DEFAULT FALSE
+                    );
 
-                mycursor.execute(command)
+                    CREATE INDEX IF NOT EXISTS idx_user_accounts
+                        ON saved_accounts (user_id);
+                """)
 
-            except:
-                command = "select * from users where logged_in = 1"
+                mycursor.executescript(command)
+
+            except sqlite3.Error as e:
+
+                messagebox.showerror("Database Error", f"Error creating table: {str(e)}")
+                conn.close()
+                return
+
+            try:
+
+                command = "SELECT * FROM users WHERE logged_in = 1"
 
                 mycursor.execute(command)
                 result = mycursor.fetchone()
 
-                command = "insert into saved_accounts (user_id, account_name, website_url, associated_email, account_password, username) values (?, ?, ?, ?, ?, ?)"
+                if not result:
+                    messagebox.showerror("Error", "No logged-in user found.")
+                    conn.close()
+                    return
 
-                # user_id, account_name, website_url, associated_email, account_password, username
+                keyring_service = f"PasswordManager-{account}"
+                keyring_username = username if username else email
 
-                mycursor.execute(command, (result[0], account, website, email, password, username))
+                keyring.set_password(keyring_service, keyring_username, password)
+
+                command = """
+                    INSERT INTO saved_accounts (
+                        user_id, account_name, website_url, 
+                        associated_email, keyring_service, keyring_username, username
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """
+
+                mycursor.execute(command, (
+                    result[0],
+                    account,
+                    website,
+                    email,
+                    keyring_service,
+                    keyring_username,
+                    username
+                ))
+
                 conn.commit()
                 conn.close()
-                messagebox.showinfo("Password Creation", "New password has been created successfully!")
+
+                messagebox.showinfo("Password Creation", "New account has been stored successfully!")
                 self.grab_release()
                 self.destroy()
+
+            except sqlite3.Error as e:
+                conn.close()
+                messagebox.showerror("Database Error", str(e))

@@ -100,7 +100,7 @@ def register():
         try:
 
             command = ("create table users (user integer primary key,"
-                       " username varchar(30), password varchar(150), email varchar(50), logged_in int)")
+                       " username varchar(30), password varchar(150), email varchar(50), logged_in int ,profile_picture BLOB")
             mycursor.execute(command)
 
         except:
@@ -127,8 +127,8 @@ def register():
 
 
 # IMPORTS THE LOGIN SCREEN LOGO
-main_menu_logo = ctk.CTkImage(light_image=Image.open("main_menu_logo.png"),
-                              dark_image=Image.open("main_menu_logo.png"), size=(200, 200))
+main_menu_logo = ctk.CTkImage(light_image=Image.open("resources/main_menu_logo.png"),
+                              dark_image=Image.open("resources/main_menu_logo.png"), size=(200, 200))
 
 # CREATES THE REGISTRATION WINDOW
 register_page = ctk.CTk()
@@ -153,7 +153,7 @@ email_entry = ctk.CTkEntry(register_page, placeholder_text="Email", font=("Helve
 email_entry.place(x=90, y=270)
 
 # CREATES THE EMAIL ICON
-email_icon = ctk.CTkImage(Image.open('email_icon.png'))
+email_icon = ctk.CTkImage(Image.open('resources/email_icon.png'))
 email_icon._size = 25, 25
 
 # CREATES AND PLACES THE EMAIL ICON AND LABEL
@@ -167,7 +167,7 @@ username_entry.place(x=90, y=310)
 username_entry.bind("<Key-space>", lambda e: "break")
 
 # CREATES THE USER ICON
-user_icon = ctk.CTkImage(Image.open('name_icon.png'))
+user_icon = ctk.CTkImage(Image.open('resources/name_icon.png'))
 user_icon._size = 25, 25
 
 # CREATES AND PLACES THE USER ICON AND LABEL
@@ -180,7 +180,7 @@ password_entry.place(x=90, y=350)
 password_entry.bind("<Key-space>", lambda e: "break")
 
 # CREATES THE PASSWORD ICON
-password_icon = ctk.CTkImage(Image.open('pass_icon.png'))
+password_icon = ctk.CTkImage(Image.open('resources/pass_icon.png'))
 password_icon._size = 25, 25
 
 # CREATES AND PLACES THE PASSWORD ICON AND LABEL
