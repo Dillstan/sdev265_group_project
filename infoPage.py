@@ -69,10 +69,14 @@ class infoPage(ctk.CTkFrame):
 
         # List of features
         features = [
-            "• Secure Storage via \nKeyring Integration",
-            "• Encryption & \nOne-Way Hashing",
+            "• Secure Storage via",
+            "  Keyring Integration",
+            "• Encryption &",
+            "  One-Way Hashing",
             "• Cross-Platform Compatibility",
-            "• User-Friendly Interface"
+            "• User-Friendly Interface",
+            "• Generate Storage &",
+            "  Secure Password"
         ]
 
         for feature in features:
