@@ -155,7 +155,7 @@ if __name__ == '__main__':
     login = ctk.CTk()
     login.title("Login | Password Manager")
     login.geometry("400x500")
-    login.iconbitmap("resources/app_logo.ico")
+    login.iconbitmap(r"appicon.ico")
     login.resizable(False, False)
     login.eval("tk::PlaceWindow . center")
     login.protocol("WM_DELETE_WINDOW", lambda: exit_button(login))

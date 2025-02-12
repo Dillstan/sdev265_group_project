@@ -284,7 +284,7 @@ class Main(ctk.CTk):
         current_user = fetch_current_username('appdata.db')
 
         current_user_label = ctk.CTkLabel(top_bar, text=current_user, font=("Lucida Sans", 20), width=200)
-        current_user_label.place_configure(x=100, y=40)
+        current_user_label.place_configure(x=100, y=65)
 
         profile_picture = ctk.CTkImage(Image.open('resources/profile_picture.png'))
         profile_picture._size = 100, 100
@@ -303,7 +303,7 @@ class Main(ctk.CTk):
 
         user_tooltip = CTkToolTip(user_icon_button, message='My Account', delay=0.1)
 
-        add_tooltip = CTkToolTip(add_icon_button, message='Add New Password', delay=0.1)
+        add_tooltip = CTkToolTip(add_icon_button, message='Add New Account', delay=0.1)
 
         def add_password():
             input_dialog = AddDialogue()

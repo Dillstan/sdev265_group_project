@@ -13,35 +13,45 @@ class AddDialogue(ctk.CTk):
         ctk.CTk.__init__(self, *args, **kwargs)
         # Create the main window
         #self.top = add_password.top = tk.Toplevel(parent)
-        self.title("Add Password | Password Manager")
-        self.geometry("400x240")
+        self.title("Add Account | Password Manager")
+        self.geometry("300x310")
         self.iconbitmap(r"appicon.ico")
         self.resizable(False, False)
         self.eval("tk::PlaceWindow . center")
         self.configure(fg_color="#212c56")
 
-        account_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text="Account Name", placeholder_text_color="white")
-        account_entry.place(x=100, y=20)
+        account_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text="Account Name",
+                                     placeholder_text_color="white",height=40,corner_radius=10,border_width=2,
+                                     border_color="#1e254b", fg_color="#697499")
+        account_entry.place(x=50, y=20)
 
-        website_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text='Website URL', placeholder_text_color='white')
-        website_entry.place(x=100, y=55)
+        website_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text='Website URL',
+                                     placeholder_text_color='white',height=40,corner_radius=10,border_width=2,
+                                     border_color="#1e254b", fg_color="#697499")
+        website_entry.place(x=50, y=65)
 
-        email_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text='Email', placeholder_text_color='white')
-        email_entry.place(x=100, y=90)
+        email_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text='Email',
+                                   placeholder_text_color='white',height=40,corner_radius=10,border_width=2,
+                                   border_color="#1e254b", fg_color="#697499")
+        email_entry.place(x=50, y=110)
 
-        username_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text='Username', placeholder_text_color='white')
-        username_entry.place(x=100, y=125)
+        username_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text='Username',
+                                      placeholder_text_color='white',height=40,corner_radius=10,border_width=2,
+                                      border_color="#1e254b", fg_color="#697499")
+        username_entry.place(x=50, y=155)
 
-        password_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text='Password', placeholder_text_color='white')
-        password_entry.place(x=100, y=160)
+        password_entry = ctk.CTkEntry(self, font=("Arial", 15, "bold"), width=200, placeholder_text='Password',
+                                      placeholder_text_color='white',height=40,corner_radius=10,border_width=2,
+                                      border_color="#1e254b", fg_color="#697499")
+        password_entry.place(x=50, y=200)
 
         # CREATES AND PLACES THE SAVE BUTTON
         login_button = ctk.CTkButton(
-            self, text="Save Password", width=200,
-            font=("Arial", 20), fg_color="#4287f5", hover_color="#0a64f5",
+            self, text="Save Account", width=200,
+            font=("Arial", 20), height=40,border_color= "#697499",fg_color="#1e254b",border_width=2, corner_radius=20,
             command=lambda: create_password()
         )
-        login_button.place(x=100, y=195)
+        login_button.place(x=50, y=250)
 
 
         def create_password():

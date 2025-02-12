@@ -252,7 +252,7 @@ class StoredPasswordsPage(ctk.CTkFrame):
                 text="",
                 image=self.fav_on_img if is_favorite else self.fav_off_img,
                 fg_color="transparent",
-                hover_color=container_color,  # match container on hover
+                hover_color=container_color,
                 width=30,
                 height=30,
                 command=lambda e_id=entry_id, curr=is_favorite: self.toggle_favorite(e_id, not curr)
