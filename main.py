@@ -139,7 +139,7 @@ class Main(ctk.CTk):
 
         self.frames = {}
 
-        for F in (StoredPasswordsPage,FavoritesPage,infoPage,GeneratePasswordPage, SettingsPage, ProfilePage):
+        for F in (StoredPasswordsPage,FavoritesPage,infoPage,GeneratePasswordPage, SettingsPage):
             frame = F(container, self)
             frame.configure(height=500, width=900)
 
@@ -187,7 +187,7 @@ class Main(ctk.CTk):
         generate_password_icon = ctk.CTkImage(Image.open('toolbar_icons/generate_icon.png'))
         generate_password_icon._size = 40, 40
 
-        user_icon = ctk.CTkImage(Image.open('toolbar_icons/user_icon.png'))
+        user_icon = ctk.CTkImage(Image.open('toolbar_icons/settings.png'))
         user_icon._size = 40, 40
 
         add_icon = ctk.CTkImage(Image.open('toolbar_icons/add_icon.png'))
@@ -217,7 +217,7 @@ class Main(ctk.CTk):
         info_icon_button.place(x=0, y=183)
 
         user_icon_button = ctk.CTkButton(toolbar_middle, height=40, width=40, image=user_icon, fg_color='transparent',
-                                         text='', hover=False, command=lambda: self.show_frames(ProfilePage))
+                                         text='', hover=False, command=lambda: self.show_frames(SettingsPage))
         user_icon_button.place(x=2, y=248)
 
         add_icon_button = ctk.CTkButton(toolbar_bottom, height=40, width=40, image=add_icon, fg_color='transparent',
@@ -317,19 +317,9 @@ from password_Vault import StoredPasswordsPage
 
 from favoritePage import FavoritesPage
 
-class SettingsPage(ctk.CTkFrame):
-    def __init__(self, parent, controller):
-        ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
-        button = ctk.CTkButton(self, text='Settings')
-        button.place(x=50, y=100)
+from SettingsPage import SettingsPage
 
 from pwd_gen import GeneratePasswordPage
-
-class ProfilePage(ctk.CTkFrame):
-    def __init__(self, parent, controller):
-        ctk.CTkFrame.__init__(self, parent, fg_color='#212c56')
-        button = ctk.CTkButton(self, text="Profile Page")
-        button.place(x=50, y=100)
 
 if __name__ == '__main__':
     create_database()
