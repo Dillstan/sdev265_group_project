@@ -204,7 +204,8 @@ class StoredPasswordsPage(ctk.CTkFrame):
                             target_size = (40, 40)
                             img = process_logo_image(logo_blob, target_size, corner_radius=20, background_color=container_color)
                             logo_img_small = ctk.CTkImage(light_image=img, dark_image=img, size=target_size)
-                            account_frame.logo_label.configure(image=logo_img_small)
+                            # Clear text when logo image is available
+                            account_frame.logo_label.configure(image=logo_img_small, text="")
                             account_frame.logo_label.image = logo_img_small
                         except Exception as e:
                             print("Error processing logo:", e)
