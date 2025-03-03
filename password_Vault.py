@@ -54,7 +54,6 @@ class StoredPasswordsPage(ctk.CTkFrame):
         self.controller = controller
         self.account_frames = {}
 
-
         # Database connection
         self.conn = sqlite3.connect("appdata.db")
         self.conn.row_factory = sqlite3.Row
@@ -90,7 +89,6 @@ class StoredPasswordsPage(ctk.CTkFrame):
         self.accounts_container = ctk.CTkFrame(self.scrollable_frame, fg_color="transparent")
         self.accounts_container.pack(fill="both", expand=True)
 
-
         # Right panel display accounts details
         self.regular_frame = ctk.CTkFrame(
             self, width=580, height=450, corner_radius=20, fg_color="#2b3564"
@@ -113,13 +111,12 @@ class StoredPasswordsPage(ctk.CTkFrame):
         self.password_visible = False
         self.edit_password_visible = False
 
-
         # Start auto refresh
         self.populate_saved_accounts()
         self.auto_refresh_accounts(interval=2000)  # Auto refresh every 2 seconds
 
     def auto_refresh_accounts(self, interval=2000):
-        self.populate_saved_accounts()
+        self.populate_saved_accounts(self.search_bar.get())
         self.after(interval, lambda: self.auto_refresh_accounts(interval))
 
     def on_search(self, event):
@@ -127,10 +124,6 @@ class StoredPasswordsPage(ctk.CTkFrame):
         self.populate_saved_accounts(search_text)
 
     def populate_saved_accounts(self, search_text=""):
-        for widget in self.accounts_container.winfo_children():
-            widget.destroy()
-        self.account_frames.clear()
-
         cursor = self.conn.cursor()
         query = """
             SELECT entry_id, account_name, website_url, associated_email,
@@ -147,7 +140,6 @@ class StoredPasswordsPage(ctk.CTkFrame):
             cursor.execute(query, params)
             accounts = cursor.fetchall()
         except sqlite3.OperationalError as e:
-
             # If the table does not exist
             if "no such table" in str(e):
                 self.display_no_accounts_message()
@@ -155,6 +147,16 @@ class StoredPasswordsPage(ctk.CTkFrame):
             else:
                 raise
 
+        # Create a dict of current accounts from DB (keyed by entry_id)
+        new_accounts = {account["entry_id"]: account for account in accounts}
+
+        # Remove widgets for accounts that no longer exist
+        for entry_id in list(self.account_frames.keys()):
+            if entry_id not in new_accounts:
+                self.account_frames[entry_id].destroy()
+                del self.account_frames[entry_id]
+
+        # Update existing widgets and create new ones if necessary
         for account in accounts:
             entry_id = account["entry_id"]
             account_name = account["account_name"]
@@ -185,38 +187,73 @@ class StoredPasswordsPage(ctk.CTkFrame):
             selected_color = "#536dff"
             container_color = selected_color if self.current_account_id == entry_id else default_color
 
-            # Each account row
-            account_frame = ctk.CTkFrame(
-                self.accounts_container,
-                height=40,
-                corner_radius=10,
-                fg_color=container_color
-            )
-            account_frame.pack(fill="x", padx=(3, 10), pady=2)
-            self.account_frames[entry_id] = account_frame
+            if entry_id in self.account_frames:
+                # Update existing widget properties
+                account_frame = self.account_frames[entry_id]
+                account_frame.configure(fg_color=container_color)
+                if hasattr(account_frame, 'account_label'):
+                    account_frame.account_label.configure(text=account_name)
+                if hasattr(account_frame, 'favorite_button'):
+                    account_frame.favorite_button.configure(
+                        image=self.fav_on_img if is_favorite else self.fav_off_img,
+                        hover_color=container_color
+                    )
+                if hasattr(account_frame, 'logo_label'):
+                    if logo_blob:
+                        try:
+                            target_size = (40, 40)
+                            img = process_logo_image(logo_blob, target_size, corner_radius=20, background_color=container_color)
+                            logo_img_small = ctk.CTkImage(light_image=img, dark_image=img, size=target_size)
+                            account_frame.logo_label.configure(image=logo_img_small)
+                            account_frame.logo_label.image = logo_img_small
+                        except Exception as e:
+                            print("Error processing logo:", e)
+                            account_frame.logo_label.configure(text=abbreviation)
+                    else:
+                        account_frame.logo_label.configure(text=abbreviation)
+            else:
+                # Each account row
+                account_frame = ctk.CTkFrame(
+                    self.accounts_container,
+                    height=40,
+                    corner_radius=10,
+                    fg_color=container_color
+                )
+                account_frame.pack(fill="x", padx=(3, 10), pady=2)
+                self.account_frames[entry_id] = account_frame
 
-            # Press animations
-            account_frame.bind("<ButtonPress-1>", lambda e, f=account_frame: f.pack_configure(padx=(6, 10)))
-            account_frame.bind("<ButtonRelease-1>", lambda e, f=account_frame: f.pack_configure(padx=(3, 10)))
-            account_frame.bind("<Button-1>", lambda e, ac=a: self.display_account_details_view(ac))
+                # Press animations
+                account_frame.bind("<ButtonPress-1>", lambda e, f=account_frame: f.pack_configure(padx=(6, 10)))
+                account_frame.bind("<ButtonRelease-1>", lambda e, f=account_frame: f.pack_configure(padx=(3, 10)))
+                account_frame.bind("<Button-1>", lambda e, ac=a: self.display_account_details_view(ac))
 
-            # Logo
-            logo_frame = ctk.CTkFrame(
-                account_frame, width=40, height=40, corner_radius=20, fg_color="#1f1f1f"
-            )
-            logo_frame.pack(side="left", padx=5, pady=5)
-            logo_frame.grid_propagate(False)
+                # Logo
+                logo_frame = ctk.CTkFrame(
+                    account_frame, width=40, height=40, corner_radius=20, fg_color="#1f1f1f"
+                )
+                logo_frame.pack(side="left", padx=5, pady=5)
+                logo_frame.grid_propagate(False)
 
-            if logo_blob:
-                try:
-                    target_size = (40, 40)
-                    img = process_logo_image(logo_blob, target_size, corner_radius=20, background_color=container_color)
-                    logo_img_small = ctk.CTkImage(light_image=img, dark_image=img, size=target_size)
-                    logo_label = ctk.CTkLabel(logo_frame, image=logo_img_small, text="")
-                    logo_label.image = logo_img_small
-                    logo_label.pack(expand=True, fill="both")
-                except Exception as e:
-                    print("Error processing logo:", e)
+                if logo_blob:
+                    try:
+                        target_size = (40, 40)
+                        img = process_logo_image(logo_blob, target_size, corner_radius=20, background_color=container_color)
+                        logo_img_small = ctk.CTkImage(light_image=img, dark_image=img, size=target_size)
+                        logo_label = ctk.CTkLabel(logo_frame, image=logo_img_small, text="")
+                        logo_label.image = logo_img_small
+                        logo_label.pack(expand=True, fill="both")
+                    except Exception as e:
+                        print("Error processing logo:", e)
+                        logo_label = ctk.CTkLabel(
+                            logo_frame,
+                            text=abbreviation,
+                            font=("Helvetica", 20, "bold"),
+                            fg_color="transparent",
+                            text_color="white"
+                        )
+                        logo_label.place(relx=0.5, rely=0.5, anchor="center")
+                else:
+                    # If no logo show abbreviation
                     logo_label = ctk.CTkLabel(
                         logo_frame,
                         text=abbreviation,
@@ -225,43 +262,38 @@ class StoredPasswordsPage(ctk.CTkFrame):
                         text_color="white"
                     )
                     logo_label.place(relx=0.5, rely=0.5, anchor="center")
-            else:
-                # If no logo show abbreviation
-                logo_label = ctk.CTkLabel(
-                    logo_frame,
-                    text=abbreviation,
-                    font=("Helvetica", 20, "bold"),
+                # Save a reference to update later
+                account_frame.logo_label = logo_label
+
+                # Account Label
+                account_label = ctk.CTkLabel(
+                    account_frame,
+                    text=account_name,
+                    font=("Helvetica", 16),
                     fg_color="transparent",
                     text_color="white"
                 )
-                logo_label.place(relx=0.5, rely=0.5, anchor="center")
+                account_label.pack(side="left", padx=(15, 10), pady=5)
+                account_label.bind("<Button-1>", lambda e, ac=a: self.display_account_details_view(ac))
+                account_frame.account_label = account_label
 
-            # Account Label
-            account_label = ctk.CTkLabel(
-                account_frame,
-                text=account_name,
-                font=("Helvetica", 16),
-                fg_color="transparent",
-                text_color="white"
-            )
-            account_label.pack(side="left", padx=(15, 10), pady=5)
+                # Favorite Toggle
+                favorite_button = ctk.CTkButton(
+                    account_frame,
+                    text="",
+                    image=self.fav_on_img if is_favorite else self.fav_off_img,
+                    fg_color="transparent",
+                    hover_color=container_color,
+                    width=30,
+                    height=30,
+                    command=lambda e_id=entry_id, curr=is_favorite: self.toggle_favorite(e_id, not curr)
+                )
+                favorite_button.pack(side="right", padx=(0, 10), pady=5)
+                account_frame.favorite_button = favorite_button
 
-            # Favorite Toggle
-            favorite_button = ctk.CTkButton(
-                account_frame,
-                text="",
-                image=self.fav_on_img if is_favorite else self.fav_off_img,
-                fg_color="transparent",
-                hover_color=container_color,
-                width=30,
-                height=30,
-                command=lambda e_id=entry_id, curr=is_favorite: self.toggle_favorite(e_id, not curr)
-            )
-            favorite_button.pack(side="right", padx=(0, 10), pady=5)
-
-            # Bind detail view to label/logo
-            for widget in (account_label, logo_frame, logo_label):
-                widget.bind("<Button-1>", lambda e, ac=a: self.display_account_details_view(ac))
+                # Bind detail view to label/logo
+                for widget in (account_label, logo_frame, logo_label):
+                    widget.bind("<Button-1>", lambda e, ac=a: self.display_account_details_view(ac))
 
     def display_no_accounts_message(self):
         for widget in self.regular_frame.winfo_children():

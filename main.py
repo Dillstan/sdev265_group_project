@@ -139,7 +139,7 @@ class Main(ctk.CTk):
 
         self.frames = {}
 
-        for F in (StoredPasswordsPage,FavoritesPage,infoPage,GeneratePasswordPage, SettingsPage):
+        for F in (StoredPasswordsPage,FavoritesPage,infoPage,GeneratePasswordPage):
             frame = F(container, self)
             frame.configure(height=500, width=900)
 
@@ -151,28 +151,25 @@ class Main(ctk.CTk):
 
         # ----------------- TOOLBAR BASE ----------------------- #
         toolbar_top = ctk.CTkFrame(self, height=60, width=60, fg_color='#151c36')
-        toolbar_top.place(x=15, y=60)
+        toolbar_top.place(x=15, y=120)
 
-        toolbar_middle = ctk.CTkFrame(self, height=300, width=60, fg_color='#151c36')
-        toolbar_middle.place(x=15, y=140)
+        toolbar_middle = ctk.CTkFrame(self, height=246, width=60, fg_color='#151c36')
+        toolbar_middle.place(x=15, y=220)
 
         toolbar_bottom = ctk.CTkFrame(self, height=60, width=60, fg_color='#151c36')
-        toolbar_bottom.place(x=15, y=460)
+        toolbar_bottom.place(x=15, y=500)
 
         separator_line = ctk.CTkFrame(self, height=600, width=2, fg_color="#151c36")
         separator_line.place(x=90, y=0)
 
         tool_button_divider_info = ctk.CTkFrame(self, height=2, width=60, fg_color='#333a55')
-        tool_button_divider_info.place(x=15, y=200)
+        tool_button_divider_info.place(x=15, y=280)
 
         tool_button_divider_favorites = ctk.CTkFrame(self, height=2, width=60, fg_color='#333a55')
-        tool_button_divider_favorites.place(x=15, y=260)
+        tool_button_divider_favorites.place(x=15, y=340)
 
         tool_button_divider_stored_passwords = ctk.CTkFrame(self, height=2, width=60, fg_color='#333a55')
-        tool_button_divider_stored_passwords.place(x=15, y=320)
-
-        tool_button_divider_generate_passwords = ctk.CTkFrame(self, height=2, width=60, fg_color='#333a55')
-        tool_button_divider_generate_passwords.place(x=15, y=380)
+        tool_button_divider_stored_passwords.place(x=15, y=400)
 
         # ----------------- TOOLBAR ICONS ----------------------- #
         info_icon = ctk.CTkImage(Image.open('toolbar_icons/info_icon.png'))
@@ -186,9 +183,6 @@ class Main(ctk.CTk):
 
         generate_password_icon = ctk.CTkImage(Image.open('toolbar_icons/generate_icon.png'))
         generate_password_icon._size = 40, 40
-
-        user_icon = ctk.CTkImage(Image.open('toolbar_icons/settings.png'))
-        user_icon._size = 40, 40
 
         add_icon = ctk.CTkImage(Image.open('toolbar_icons/add_icon.png'))
         add_icon._size = 40, 40
@@ -216,10 +210,6 @@ class Main(ctk.CTk):
                                          text='', hover=False, command=lambda: self.show_frames(infoPage))
         info_icon_button.place(x=0, y=183)
 
-        user_icon_button = ctk.CTkButton(toolbar_middle, height=40, width=40, image=user_icon, fg_color='transparent',
-                                         text='', hover=False, command=lambda: self.show_frames(SettingsPage))
-        user_icon_button.place(x=2, y=248)
-
         add_icon_button = ctk.CTkButton(toolbar_bottom, height=40, width=40, image=add_icon, fg_color='transparent',
                                         text='', hover=False, command=lambda: add_password())
         add_icon_button.place(x=2, y=6)
@@ -244,36 +234,20 @@ class Main(ctk.CTk):
         generate_password_icon_button.bind('<Leave>',
                                            lambda event: reset_cursor_on_leave(generate_password_icon_button))
 
-        user_icon_button.bind('<Enter>', lambda event: cursor_on_hover(user_icon_button))
-        user_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(user_icon_button))
-
         # ----------------- TOP BAR --------------------- #
 
         top_bar = ctk.CTkFrame(self, height=90, width=900, fg_color='#212c56')
         top_bar.place(x=99, y=5)
-
-        settings_icon = ctk.CTkImage(Image.open('toolbar_icons/settings_icon.png'))
-        settings_icon._size = 35, 35
-
-        settings_icon_button = ctk.CTkButton(top_bar, image=settings_icon, fg_color='transparent', text='', hover=False,
-                                             command=lambda: self.show_frames(SettingsPage))
-        settings_icon_button.place(x=740, y=25)
-
-        settings_icon_button.bind('<Enter>', lambda event: cursor_on_hover(settings_icon_button))
-        settings_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(settings_icon_button))
-
-        settings_text = ctk.CTkLabel(top_bar, text='Settings', font=('Helvetica', 10))
-        settings_text.place(x=790, y=65)
 
         sign_out_icon = ctk.CTkImage(Image.open('toolbar_icons/sign_out_icon.png'))
         sign_out_icon._size = 33, 33
 
         sign_out_icon_button = ctk.CTkButton(top_bar, image=sign_out_icon, command=sign_out, fg_color='transparent',
                                              text='', hover=False, height=30, width=30)
-        sign_out_icon_button.place(x=840, y=25)
+        sign_out_icon_button.place(x=820, y=15)
 
         sign_out_text = ctk.CTkLabel(top_bar, text='Sign Out', font=('Helvetica', 10))
-        sign_out_text.place(x=840, y=65)
+        sign_out_text.place(x=820, y=55)
 
         sign_out_icon_button.bind('<Enter>', lambda event: cursor_on_hover(sign_out_icon_button))
         sign_out_icon_button.bind('<Leave>', lambda event: reset_cursor_on_leave(sign_out_icon_button))
@@ -301,8 +275,6 @@ class Main(ctk.CTk):
 
         generate_password_tooltip = CTkToolTip(generate_password_icon_button, message='Generate Password', delay=0.1)
 
-        user_tooltip = CTkToolTip(user_icon_button, message='My Account', delay=0.1)
-
         add_tooltip = CTkToolTip(add_icon_button, message='Add New Account', delay=0.1)
 
         def add_password():
@@ -316,8 +288,6 @@ from infoPage import infoPage
 from password_Vault import StoredPasswordsPage
 
 from favoritePage import FavoritesPage
-
-from SettingsPage import SettingsPage
 
 from pwd_gen import GeneratePasswordPage
 
